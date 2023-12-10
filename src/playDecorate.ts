@@ -1,7 +1,13 @@
 import * as vscode from 'vscode'
 import { uuidRegex } from './extension'
 
-function playDecorate(context: vscode.ExtensionContext) {
+// TODO package.json?
+// {
+//   "command": "extension.openLink",
+//   "title": "code-play: Open Link"
+// }
+
+export function playDecorate(context: vscode.ExtensionContext) {
   {
     function decorateClickableLinks(
       editor: vscode.TextEditor,

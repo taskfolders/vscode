@@ -3,8 +3,40 @@
 import * as vscode from 'vscode'
 import * as urlRegex from 'url-regex'
 import { hoverUUID } from './hoverUUID'
+import { decorateUUIDasLinks } from './decorateUUIDasLinks'
+import { CustomLinkProvider } from './CustomLinkProvider'
+import { registerUUIDLinks } from './registerUUIDLinks'
 export const uuidRegex =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+
+function play1(context: vscode.ExtensionContext) {
+  context.subscriptions.push(
+    vscode.commands.registerCommand('extension.openCustomLink', url => {
+      const panel = vscode.window.createWebviewPanel(
+        'customLink',
+        'Custom Link',
+        vscode.ViewColumn.Two,
+        {},
+      )
+
+      // Handle link clicks in WebView
+      panel.webview.onDidReceiveMessage(message => {
+        vscode.window.showInformationMessage(
+          `Clicked custom link: ${message.url}`,
+        )
+      })
+      console.log('--here')
+
+      // Load a simple HTML content with a link
+      panel.webview.html = `
+            <html>
+            <body>
+                <a href="${url}" onclick="vscode.postMessage({ url: '${url}' })">Open Custom Link</a>
+            </body>
+            </html>`
+    }),
+  )
+}
 
 console.log('Hello world!')
 export function isUUID(str: string) {
@@ -100,35 +132,98 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(d3)
   }
 
-  {
-    let disposable = hoverUUID()
-    context.subscriptions.push(disposable)
-  }
+  // {
+  //   vscode.window.onDidChangeActiveTextEditor(editor => {
+  //     console.log('Code change!')
+  //     if (editor) {
+  //       const disposable = vscode.commands.registerCommand(
+  //         'extension.customLinkDetection',
+  //         () => {
+  //           console.log('Custom link detect')
+  //           const selection = editor.selection
+  //           const text = editor.document.getText(selection)
+  //           const regex = /https?:\/\/[^\s]+/g
+  //           const match = regex.exec(text)
+  //           if (match) {
+  //             vscode.env.openExternal(vscode.Uri.parse(match[0]))
+  //           }
+  //         },
+  //       )
+  //       context.subscriptions.push(disposable)
+  //     }
+  //   })
+  // }
 
-  {
-    vscode.window.onDidChangeActiveTextEditor(editor => {
-      console.log('Code change!')
-      if (editor) {
-        const disposable = vscode.commands.registerCommand(
-          'extension.customLinkDetection',
-          () => {
-            console.log('Custom link detect')
-            const selection = editor.selection
-            const text = editor.document.getText(selection)
-            const regex = /https?:\/\/[^\s]+/g
-            const match = regex.exec(text)
-            if (match) {
-              vscode.env.openExternal(vscode.Uri.parse(match[0]))
-            }
-          },
-        )
-        context.subscriptions.push(disposable)
-      }
-    })
-  }
+  // TODO top
+  // hoverUUID(context)
+  // playWiki_2(context)
 
+  //markdownLinks(context)
+  // play1(context)
+  // playWiki(context)
+  registerUUIDLinks(context)
+
+  // this one bad!
   // playDecorate(context)
+
+  // TODO this one good!
+  // decorateUUIDasLinks(context)
+
+  context.subscriptions.push(CustomLinkProvider.register(context))
+  console.log('end')
 }
 
 // This method is called when your extension is deactivated
 export function deactivate() {}
+
+function playWiki_2(context: vscode.ExtensionContext) {
+  context.subscriptions.push(
+    vscode.languages.registerDocumentLinkProvider(
+      { language: 'markdown' },
+      {
+        provideDocumentLinks(
+          document: vscode.TextDocument,
+          token: vscode.CancellationToken,
+        ): vscode.DocumentLink[] | Thenable<vscode.DocumentLink[]> {
+          const links: vscode.DocumentLink[] = []
+          console.log({ links })
+          const text = document.getText()
+
+          // Use a regular expression to find smart wikilinks
+          const wikilinkRegex = /\[\[([^\]]+)\]\]/g
+          let match
+
+          while ((match = wikilinkRegex.exec(text)) !== null) {
+            console.log('Found wikilink', match)
+            const startPos = document.positionAt(match.index + 2) // Add 2 to skip the [[
+            const endPos = document.positionAt(
+              match.index + match[0].length - 2,
+            ) // Subtract 2 to skip the ]]
+
+            const range = new vscode.Range(startPos, endPos)
+
+            // Construct the URI for the wikilink
+            const pageName = match[1]
+            const wikilinkUri = vscode.Uri.parse(
+              `your-wiki-base-url/${pageName}.md`,
+            ) // Customize the URL structure
+
+            const link = new vscode.DocumentLink(range, wikilinkUri)
+            console.log({ link, vl: wikilinkUri.toString() })
+            links.push(link)
+          }
+
+          return links
+        },
+        resolveDocumentLink(
+          link: vscode.DocumentLink,
+          token: vscode.CancellationToken,
+        ): vscode.ProviderResult<vscode.DocumentLink> {
+          // If needed, you can resolve additional information about the link here
+          console.log({ resolveLink: link })
+          return link
+        },
+      },
+    ),
+  )
+}

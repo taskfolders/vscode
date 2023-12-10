@@ -47,8 +47,8 @@
         "title": "code-play: Hello World v2"
       },
       {
-        "command": "extension.openLink",
-        "title": "code-play: Open Link"
+        "command": "code-play.openUUID",
+        "title": "code-play: Open UUID"
       }
     ]
   },
