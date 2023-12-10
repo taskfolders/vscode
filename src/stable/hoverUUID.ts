@@ -1,39 +1,14 @@
 import * as vscode from 'vscode'
 import * as fs from 'fs'
-import { isUUID } from './extension'
+import { isUUID } from '../isUUID'
 
-import { join } from 'path'
-import { readFileSync } from 'fs'
-
-function parsePathUids() {
-  let path = join(
-    // @ts-expect-error TODO
-    process.env.HOME,
-    '.config/TaskFolders.com/db.json',
-  )
-  let data = JSON.parse(readFileSync(path).toString()) as {
-    paths: {
-      uid: any
-      contentIds: { uids: any }
-    }[]
-  }
-
-  let uids = {} as any
-  Object.entries(data.paths).map(([path, value]) => {
-    uids[value.uid] = path
-
-    let con = value.contentIds?.uids
-    if (con) {
-      console.log('TODO')
-      // $dev(value)
-    }
-  })
-  return uids
-}
+import { UidDatabase } from '../utils/UidDatabase'
 
 export function hoverUUID(context: vscode.ExtensionContext) {
   console.log('DEBUG: hover provider')
-  let uidsMap = parsePathUids()
+  let db = new UidDatabase()
+  db.load()
+  let uidsMap = db.uidsMap
   let r1 = fs.readdirSync(process.env.HOME as string)
   console.log({ r1 })
   let disposable = vscode.languages.registerHoverProvider('*', {

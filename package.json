@@ -73,12 +73,15 @@
     "@vscode/test-electron": "^2.3.8",
     "eslint": "^8.54.0",
     "ts-loader": "^9.5.1",
+    "ts-node": "^10.9.2",
     "typescript": "^5.3.2",
     "webpack": "^5.89.0",
     "webpack-cli": "^5.1.4"
   },
   "dependencies": {
     "@vscode/vsce": "^2.22.0",
+    "memfs": "^4.6.0",
+    "mocha": "^10.2.0",
     "url-regex": "^5.0.0",
     "uuid": "^9.0.1"
   }

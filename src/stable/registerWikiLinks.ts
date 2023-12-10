@@ -1,16 +1,16 @@
 import * as vscode from 'vscode'
+import { parseWikiLinks } from './parseWikiLinks'
+import { dirname } from 'path'
 
-export const uuidRegex =
-  /[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}/i
+export function registerWikiLinks(context: vscode.ExtensionContext) {
+  // let langs = vscode.languages.getLanguages().then(x => {
+  //   console.log({ langs: x })
+  // })
+  // let conf = vscode.workspace.getConfiguration('markdown')
 
-export function registerUUIDLinks(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.languages.registerDocumentLinkProvider(
-      {
-        scheme: 'file',
-        //language: 'markdown'
-        language: '*',
-      },
+      { language: 'markdown' },
       {
         provideDocumentLinks(
           document: vscode.TextDocument,
@@ -19,29 +19,26 @@ export function registerUUIDLinks(context: vscode.ExtensionContext) {
           const links: vscode.DocumentLink[] = []
           const text = document.getText()
 
-          let all = text.matchAll(new RegExp(uuidRegex, 'g'))
-
-          for (let match of all) {
-            console.log('Found uuid match', match)
-            const startPos = document.positionAt(match.index + 0) // Add 2 to skip the [[
+          let dir = dirname(document.fileName)
+          let all = parseWikiLinks({ text, dir })
+          for (let item of all) {
+            const startPos = document.positionAt(item.index + 2) // Add 2 to skip the [[
             const endPos = document.positionAt(
-              match.index + match[0].length - 0,
+              item.index + item.text.length - 2,
             ) // Subtract 2 to skip the ]]
 
             const range = new vscode.Range(startPos, endPos)
 
             // Construct the URI for the wikilink
-            const pageName = match[0]
             const wikilinkUri = vscode.Uri.parse(
-              `your-wiki-base-url/${pageName}.md`,
+              item.path,
+              //`your-wiki-base-url/${pageName}.md`,
             ) // Customize the URL structure
 
             const link = new vscode.DocumentLink(range, wikilinkUri)
-            console.log({ linkL: link.target, vl: wikilinkUri.toString() })
             links.push(link)
           }
 
-          console.log({ links })
           return links
         },
         resolveDocumentLink(
