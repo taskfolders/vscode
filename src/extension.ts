@@ -71,10 +71,14 @@ export function activate(context: vscode.ExtensionContext) {
       'code-play.helloWorld',
       () => {
         console.log('DEBUG: inside hello')
+        console.log('This is a log message')
+        console.warn('This is a warning message')
+        console.error('This is an error message')
+        vscode.window.showInformationMessage('This is an information message')
         // The code you place here will be executed every time your command is executed
         // Display a message box to the user
         vscode.window.showInformationMessage(
-          'Hello World from code-play MODIFIED!',
+          'Hello World from code-play MODIFIED 2!',
         )
       },
     )
@@ -94,23 +98,56 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(d3)
   }
 
-  // {
-  //   console.log('DEBUG: hover provider')
-  //   let disposable = vscode.languages.registerHoverProvider('*', {
-  //     provideHover(document, position, token) {
-  //       const range = document.getWordRangeAtPosition(position)
-  //       const word = document.getText(range)
-  //       console.log('DEBUG: hover!')
-  //       if (isUUID(word)) {
-  //         console.log('DEBUG: replace hover!')
-  //         const uuidLink = `https://example.com/uuid/${word}`
-  //         return new vscode.Hover(`${uuidLink}`)
-  //       }
-  //     },
-  //   })
+  {
+    console.log('DEBUG: hover provider')
+    let disposable = vscode.languages.registerHoverProvider('*', {
+      provideHover(document, position, token) {
+        const hyphenatedWordRegex = /[\w\d-]+/g
 
-  //   context.subscriptions.push(disposable)
-  // }
+        const range = document.getWordRangeAtPosition(
+          position,
+          hyphenatedWordRegex,
+        )
+        const word = document.getText(range)
+        console.log('DEBUG: hover!', { word, is: isUUID(word) })
+        if (isUUID(word)) {
+          console.log('DEBUG: replace hover!')
+          let link1 = `https://example.com/uuid/${word}`
+          let link2 =
+            'vscode:///home/fgarcia/work/action/now/code-play/index.md'
+          let uuidLink =
+            'file:///home/fgarcia/work/action/now/code-play/index.md'
+          return new vscode.Hover(
+            `Open link ${uuidLink}\n${link1}\n${link2}\n\n[Open 1](file:///tmp/foo.md)\n\n[open 2](file:///home/fgarcia/work/action/now/code-play/index.md)`,
+          )
+        }
+      },
+    })
+
+    context.subscriptions.push(disposable)
+  }
+
+  {
+    vscode.window.onDidChangeActiveTextEditor(editor => {
+      console.log('Code change!')
+      if (editor) {
+        const disposable = vscode.commands.registerCommand(
+          'extension.customLinkDetection',
+          () => {
+            console.log('Custom link detect')
+            const selection = editor.selection
+            const text = editor.document.getText(selection)
+            const regex = /https?:\/\/[^\s]+/g
+            const match = regex.exec(text)
+            if (match) {
+              vscode.env.openExternal(vscode.Uri.parse(match[0]))
+            }
+          },
+        )
+        context.subscriptions.push(disposable)
+      }
+    })
+  }
 }
 
 // This method is called when your extension is deactivated
