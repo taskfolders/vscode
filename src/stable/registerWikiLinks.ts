@@ -30,12 +30,12 @@ export function registerWikiLinks(context: vscode.ExtensionContext) {
             const range = new vscode.Range(startPos, endPos)
 
             // Construct the URI for the wikilink
-            const wikilinkUri = vscode.Uri.parse(
+            const wikiLinkUri = vscode.Uri.parse(
               item.path,
               //`your-wiki-base-url/${pageName}.md`,
             ) // Customize the URL structure
 
-            const link = new vscode.DocumentLink(range, wikilinkUri)
+            const link = new vscode.DocumentLink(range, wikiLinkUri)
             links.push(link)
           }
 

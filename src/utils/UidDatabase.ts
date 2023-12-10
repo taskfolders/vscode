@@ -39,7 +39,6 @@ export class UidDatabase {
         sids[value.sid] = path
       }
 
-      $dev(value)
       let con = value.contentIds?.uids
       if (con) {
         console.log('TODO')

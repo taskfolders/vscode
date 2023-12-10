@@ -14,7 +14,7 @@ export function parseUidLinks(text: string) {
     if (pathFound) {
       acu.push({ index: match.index as number, uid, path: pathFound })
     } else {
-      acu.push({ index: match.index as number, uid, path: '-unknown-' })
+      // acu.push({ index: match.index as number, uid, path: '-unknown-' })
     }
   }
   return acu
