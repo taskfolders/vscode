@@ -1,11 +1,13 @@
 // The module 'vscode' contains the VS Code extensibility API
 // Import the module and reference it with the alias vscode in your code below
 import * as vscode from 'vscode'
+import * as urlRegex from 'url-regex'
+import { hoverUUID } from './hoverUUID'
+export const uuidRegex =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
 console.log('Hello world!')
-function isUUID(str: string) {
-  const uuidRegex =
-    /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
+export function isUUID(str: string) {
   return uuidRegex.test(str)
 }
 
@@ -99,31 +101,7 @@ export function activate(context: vscode.ExtensionContext) {
   }
 
   {
-    console.log('DEBUG: hover provider')
-    let disposable = vscode.languages.registerHoverProvider('*', {
-      provideHover(document, position, token) {
-        const hyphenatedWordRegex = /[\w\d-]+/g
-
-        const range = document.getWordRangeAtPosition(
-          position,
-          hyphenatedWordRegex,
-        )
-        const word = document.getText(range)
-        console.log('DEBUG: hover!', { word, is: isUUID(word) })
-        if (isUUID(word)) {
-          console.log('DEBUG: replace hover!')
-          let link1 = `https://example.com/uuid/${word}`
-          let link2 =
-            'vscode:///home/fgarcia/work/action/now/code-play/index.md'
-          let uuidLink =
-            'file:///home/fgarcia/work/action/now/code-play/index.md'
-          return new vscode.Hover(
-            `Open link ${uuidLink}\n${link1}\n${link2}\n\n[Open 1](file:///tmp/foo.md)\n\n[open 2](file:///home/fgarcia/work/action/now/code-play/index.md)`,
-          )
-        }
-      },
-    })
-
+    let disposable = hoverUUID()
     context.subscriptions.push(disposable)
   }
 
@@ -148,6 +126,8 @@ export function activate(context: vscode.ExtensionContext) {
       }
     })
   }
+
+  // playDecorate(context)
 }
 
 // This method is called when your extension is deactivated

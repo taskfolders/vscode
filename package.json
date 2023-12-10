@@ -45,6 +45,10 @@
       {
         "command": "code-play.playHello",
         "title": "code-play: Hello World v2"
+      },
+      {
+        "command": "extension.openLink",
+        "title": "code-play: Open Link"
       }
     ]
   },
@@ -75,6 +79,7 @@
   },
   "dependencies": {
     "@vscode/vsce": "^2.22.0",
+    "url-regex": "^5.0.0",
     "uuid": "^9.0.1"
   }
 }
