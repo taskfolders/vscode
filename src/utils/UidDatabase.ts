@@ -18,7 +18,7 @@ export class UidDatabase {
   //parsePathUids() {
   load() {
     let path = join(
-      // @ts-expect-error TODO
+      // @ ts-expect-error TODO
       process.env.HOME,
       '.config/TaskFolders.com/db.json',
     )

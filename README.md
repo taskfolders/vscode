@@ -1,9 +1,5 @@
----
-tags: one
----
-
 Hello world and more
-this is a demo ![image](./fox.png)
+this is a demo 
 
 But not sure how to
   see

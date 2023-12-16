@@ -1,14 +1,24 @@
 {
-  "name": "code-play",
-  "displayName": "code-play",
-  "publisher": "fgarcia--publisher",
+  "name": "TaskFolders",
+  "displayName": "TaskFolders",
+  "publisher": "TaskFolders",
   "description": "my description",
-  "version": "0.0.2",
+  "version": "0.0.1",
   "engines": {
     "vscode": "^1.85.0"
   },
+  "icon": {
+    "light": "./art/logo-round/LogoRound-128.png",
+    "dark": "./art/logo-round/LogoRound-128.png"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/taskfolders/vscode"
+  },
   "categories": [
-    "Other"
+    "Notebooks",
+    "Linters",
+    "Formatters"
   ],
   "activationEvents": [
     "onStartupFinished"
