@@ -28,12 +28,16 @@ export function registerUUIDLinks(context: vscode.ExtensionContext) {
 
             // Construct the URI for the wikilink
             //const pageName = match[0]
-            const wikilinkUri = vscode.Uri.parse(
+            let linkUri = vscode.Uri.parse(
               item.path,
               //`your-wiki-base-url/${pageName}.md`,
             ) // Customize the URL structure
 
-            const link = new vscode.DocumentLink(range, wikilinkUri)
+            let lineNumber
+            if (lineNumber) {
+              linkUri = linkUri.with({ fragment: `L${lineNumber}` })
+            }
+            const link = new vscode.DocumentLink(range, linkUri)
             // console.log({ linkL: link.target, vl: wikilinkUri.toString() })
             links.push(link)
           }

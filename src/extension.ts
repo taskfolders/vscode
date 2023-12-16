@@ -7,6 +7,7 @@ import { decorateUUIDasLinks } from './decorateUUIDasLinks'
 import { CustomLinkProvider } from './CustomLinkProvider'
 import { registerUUIDLinks } from './stable/registerUUIDLinks'
 import { registerWikiLinks } from './stable/registerWikiLinks'
+import { MemFS } from './tmp/MemFS'
 export const uuidRegex =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
@@ -85,6 +86,7 @@ export function activate(context: vscode.ExtensionContext) {
   // Use the console to output diagnostic information (console.log) and errors (console.error)
   // This line of code will only be executed once when your extension is activated
   console.log('Congratulations, your extension "code-play" is now active!')
+  console.log(context.subscriptions)
 
   let d1 = vscode.commands.registerCommand('code-play.playHello', () => {
     // The code you place here will be executed every time your command is executed
@@ -166,7 +168,82 @@ export function activate(context: vscode.ExtensionContext) {
   // decorateUUIDasLinks(context)
 
   context.subscriptions.push(CustomLinkProvider.register(context))
-  console.log('end')
+  console.log('---end')
+
+  {
+    class Panda {
+      readFile(uri: any) {
+        console.log({ uri })
+        return new Uint8Array(
+          Buffer.from('Hello, this is a custom file content!', 'utf-8'),
+        )
+      }
+
+      onDidChangeFile() {
+        console.log('change !!!!')
+        return new vscode.Disposable(() => {})
+      }
+
+      readDirectory() {
+        console.log('read dir!!!!')
+        return []
+      }
+      writeFile(uri, content, options) {
+        // Save the content of the file
+        console.log(`Writing to ${uri.path}`)
+        console.log(`Content: ${content.toString()}`)
+        return Promise.resolve()
+      }
+
+      delete(uri, options) {
+        // Delete the file
+        console.log(`Deleting ${uri.path}`)
+        return Promise.resolve()
+      }
+
+      createDirectory(uri) {
+        // Create a directory (not supported in this example)
+        return Promise.reject('Creating directories is not supported.')
+      }
+
+      rename(oldUri, newUri, options) {
+        // Rename the file (not supported in this example)
+        return Promise.reject('Renaming files is not supported.')
+      }
+      watch() {
+        console.log('wa!!!!')
+        return new vscode.Disposable(() => {})
+      }
+      stat() {
+        console.log('Stat!!!!')
+        return null
+      }
+    }
+    //let memFs = new Panda()
+    let memFs = new MemFS()
+    memFs.writeFile(vscode.Uri.parse(`memfs:/file.txt`), Buffer.from('foo'), {
+      create: true,
+      overwrite: true,
+    })
+    context.subscriptions.push(
+      vscode.workspace.registerFileSystemProvider('memfs', memFs, {
+        isCaseSensitive: false,
+      }),
+    )
+    // vscode.window.registerUriHandler({})
+    const disposable = vscode.window.registerUriHandler({
+      handleUri(uri) {
+        // Customize the link handling logic
+        console.log('Custom link handling:', uri)
+        vscode.window.showInformationMessage(`Opening custom link: ${uri.path}`)
+      },
+    })
+  }
+
+  // vscode.commands.executeCommand('vscode.executeLinkProvider').then(links => {
+  //   console.log({ result: links })
+  // })
+  // let r1 = vscode.commands.executeCommand('vscode.executeLinkProvider')
 }
 
 // This method is called when your extension is deactivated
