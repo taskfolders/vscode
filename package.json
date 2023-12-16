@@ -7,7 +7,7 @@
   "engines": {
     "vscode": "^1.85.0"
   },
-  "icon": "./asserts/logo/LogoTransparent-128.png",
+  "icon": "./assets/logo/128.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/taskfolders/vscode"
