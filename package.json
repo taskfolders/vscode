@@ -7,10 +7,7 @@
   "engines": {
     "vscode": "^1.85.0"
   },
-  "icon": {
-    "light": "./art/logo-round/LogoRound-128.png",
-    "dark": "./art/logo-round/LogoRound-128.png"
-  },
+  "icon": "./asserts/logo/LogoTransparent-128.png",
   "repository": {
     "type": "git",
     "url": "https://github.com/taskfolders/vscode"
