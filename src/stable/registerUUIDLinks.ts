@@ -17,7 +17,8 @@ export function registerUUIDLinks(context: vscode.ExtensionContext) {
           const links: vscode.DocumentLink[] = []
           const text = document.getText()
           let all = parseUidLinks(text)
-          console.log({ all, text })
+          console.log('[TF] Register UUID Links')
+          //console.log({ all, text })
 
           for (let item of all) {
             //console.log('Found uuid match', match)
@@ -42,7 +43,7 @@ export function registerUUIDLinks(context: vscode.ExtensionContext) {
             links.push(link)
           }
 
-          console.log({ links })
+          // console.log({ links })
           return links
         },
         resolveDocumentLink(

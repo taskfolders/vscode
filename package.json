@@ -28,14 +28,8 @@
         "aliases": [
           "Plain Text"
         ],
-        "extensions": [
-          ".md",
-          ".sh",
-          ".ts"
-        ],
-        "filenames": [
-          ""
-        ],
+        "extensions": [],
+        "filenames": [],
         "mimeTypes": [
           "text/plain"
         ],

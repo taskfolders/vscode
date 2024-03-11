@@ -16,6 +16,7 @@ export function registerWikiLinks(context: vscode.ExtensionContext) {
           document: vscode.TextDocument,
           token: vscode.CancellationToken,
         ): vscode.DocumentLink[] | Thenable<vscode.DocumentLink[]> {
+          console.log('Register WikiLinks')
           const links: vscode.DocumentLink[] = []
           const text = document.getText()
 

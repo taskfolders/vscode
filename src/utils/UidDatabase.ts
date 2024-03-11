@@ -1,18 +1,21 @@
 import { join } from 'path'
 import { readFileSync } from 'fs'
 
-let single: UidDatabase
+// TODO bring official Read/View model types .. or sdk?
+// import '@taskfolders/utils/markdown'
+
+let singleton: UidDatabase
 
 export class UidDatabase {
   uidToPath: Record<string, string> = {}
   sidToPath: Record<string, string> = {}
 
   static singleton() {
-    if (!single) {
-      single = new UidDatabase()
-      single.load()
+    if (!singleton) {
+      singleton = new UidDatabase()
+      singleton.load()
     }
-    return single
+    return singleton
   }
 
   //parsePathUids() {

@@ -5,7 +5,7 @@ export default defineConfig({
     include: ['./src/**/*.{spec,vitest}.?(c|m)[jt]s?(x)'],
     //exclude: ['**/_build/**']
     exclude: ['**/_build/**'],
-    setupFiles: ['@taskfolders/utils/logger/node/register-global.start'],
+    //setupFiles: ['@taskfolders/utils/logger/node/register-global.start'],
 
   },
 })

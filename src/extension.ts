@@ -8,6 +8,10 @@ import { CustomLinkProvider } from './CustomLinkProvider'
 import { registerUUIDLinks } from './stable/registerUUIDLinks'
 import { registerWikiLinks } from './stable/registerWikiLinks'
 import { MemFS } from './tmp/MemFS'
+import { UidDatabase } from './utils/UidDatabase'
+
+// TODO replace by tf-std lib
+// import {isUUID} from '@taskfolders/utils/regex/UUID'
 export const uuidRegex =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
@@ -91,43 +95,23 @@ export function activate(context: vscode.ExtensionContext) {
   // console.log(context.subscriptions)
   console.error('Activate TF')
 
-  let d1 = vscode.commands.registerCommand('TaskFolders.playHello', () => {
-    // The code you place here will be executed every time your command is executed
-    // Display a message box to the user
-    vscode.window.showInformationMessage('Hello World from code-play 2!')
-    console.log('[TF] command executed!')
-  })
-  context.subscriptions.push(d1)
-
   {
-    // The command has been defined in the package.json file
-    // Now provide the implementation of the command with registerCommand
-    // The commandId parameter must match the command field in package.json
-    let disposable = vscode.commands.registerCommand(
-      'TaskFolders.helloWorld',
+    let d1 = vscode.commands.registerCommand(
+      'TaskFolders.reload-database',
       () => {
-        console.log('DEBUG: inside hello')
-        console.log('This is a log message')
-        console.warn('This is a warning message')
-        console.error('This is an error message')
-        console.error('This is an error message again')
-        vscode.window.showInformationMessage('This is an information message')
-        // The code you place here will be executed every time your command is executed
-        // Display a message box to the user
-        vscode.window.showInformationMessage(
-          'Hello World from code-play MODIFIED 2!',
-        )
+        let db = UidDatabase.singleton()
+        db.load()
+        vscode.window.showInformationMessage('TaskFolders database reloaded')
       },
     )
-
-    context.subscriptions.push(disposable)
+    context.subscriptions.push(d1)
   }
 
   // ----
   {
     console.log('DEBUG: register linkify')
     // Register a command to transform UUIDs into clickable links
-    let d3 = vscode.commands.registerCommand('code-play.linkifyUUIDs', () => {
+    let d3 = vscode.commands.registerCommand('TaskFolders.linkifyUUIDs', () => {
       linkifyUUIDs()
     })
 
@@ -162,17 +146,12 @@ export function activate(context: vscode.ExtensionContext) {
   //markdownLinks(context)
   // play1(context)
   // playWiki(context)
-  // console.log('one - log')
-  // console.info('one - info')
-  // console.warn('one - warn')
-  // console.error('one - error')
+
   outputChannel.appendLine('TaskFolders channel started')
 
-  //throw Error('boom')
   registerUUIDLinks(context)
-  if (1) {
-    registerWikiLinks(context)
-  }
+  registerWikiLinks(context)
+
   // this one bad!
   // playDecorate(context)
 
@@ -180,82 +159,83 @@ export function activate(context: vscode.ExtensionContext) {
   // decorateUUIDasLinks(context)
 
   context.subscriptions.push(CustomLinkProvider.register(context))
-  console.log('---end')
 
-  {
-    class Panda {
-      readFile(uri: any) {
-        console.log({ uri })
-        return new Uint8Array(
-          Buffer.from('Hello, this is a custom file content!', 'utf-8'),
-        )
-      }
-
-      onDidChangeFile() {
-        console.log('change !!!!')
-        return new vscode.Disposable(() => {})
-      }
-
-      readDirectory() {
-        console.log('read dir!!!!')
-        return []
-      }
-      writeFile(uri, content, options) {
-        // Save the content of the file
-        console.log(`Writing to ${uri.path}`)
-        console.log(`Content: ${content.toString()}`)
-        return Promise.resolve()
-      }
-
-      delete(uri, options) {
-        // Delete the file
-        console.log(`Deleting ${uri.path}`)
-        return Promise.resolve()
-      }
-
-      createDirectory(uri) {
-        // Create a directory (not supported in this example)
-        return Promise.reject('Creating directories is not supported.')
-      }
-
-      rename(oldUri, newUri, options) {
-        // Rename the file (not supported in this example)
-        return Promise.reject('Renaming files is not supported.')
-      }
-      watch() {
-        console.log('wa!!!!')
-        return new vscode.Disposable(() => {})
-      }
-      stat() {
-        console.log('Stat!!!!')
-        return null
-      }
-    }
-    //let memFs = new Panda()
-    let memFs = new MemFS()
-    memFs.writeFile(vscode.Uri.parse(`memfs:/file.txt`), Buffer.from('foo'), {
-      create: true,
-      overwrite: true,
-    })
-    context.subscriptions.push(
-      vscode.workspace.registerFileSystemProvider('memfs', memFs, {
-        isCaseSensitive: false,
-      }),
-    )
-    // vscode.window.registerUriHandler({})
-    const disposable = vscode.window.registerUriHandler({
-      handleUri(uri) {
-        // Customize the link handling logic
-        console.log('Custom link handling:', uri)
-        vscode.window.showInformationMessage(`Opening custom link: ${uri.path}`)
-      },
-    })
-  }
+  play(context)
 
   // vscode.commands.executeCommand('vscode.executeLinkProvider').then(links => {
   //   console.log({ result: links })
   // })
   // let r1 = vscode.commands.executeCommand('vscode.executeLinkProvider')
+}
+
+function play(context: vscode.ExtensionContext) {
+  class Panda {
+    readFile(uri: any) {
+      console.log({ uri })
+      return new Uint8Array(
+        Buffer.from('Hello, this is a custom file content!', 'utf-8'),
+      )
+    }
+
+    onDidChangeFile() {
+      console.log('change !!!!')
+      return new vscode.Disposable(() => {})
+    }
+
+    readDirectory() {
+      console.log('read dir!!!!')
+      return []
+    }
+    writeFile(uri, content, options) {
+      // Save the content of the file
+      console.log(`Writing to ${uri.path}`)
+      console.log(`Content: ${content.toString()}`)
+      return Promise.resolve()
+    }
+
+    delete(uri, options) {
+      // Delete the file
+      console.log(`Deleting ${uri.path}`)
+      return Promise.resolve()
+    }
+
+    createDirectory(uri) {
+      // Create a directory (not supported in this example)
+      return Promise.reject('Creating directories is not supported.')
+    }
+
+    rename(oldUri, newUri, options) {
+      // Rename the file (not supported in this example)
+      return Promise.reject('Renaming files is not supported.')
+    }
+    watch() {
+      console.log('wa!!!!')
+      return new vscode.Disposable(() => {})
+    }
+    stat() {
+      console.log('Stat!!!!')
+      return null
+    }
+  }
+  //let memFs = new Panda()
+  let memFs = new MemFS()
+  memFs.writeFile(vscode.Uri.parse(`memfs:/file.txt`), Buffer.from('foo'), {
+    create: true,
+    overwrite: true,
+  })
+  context.subscriptions.push(
+    vscode.workspace.registerFileSystemProvider('memfs', memFs, {
+      isCaseSensitive: false,
+    }),
+  )
+  // vscode.window.registerUriHandler({})
+  const disposable = vscode.window.registerUriHandler({
+    handleUri(uri) {
+      // Customize the link handling logic
+      console.log('Custom link handling:', uri)
+      vscode.window.showInformationMessage(`Opening custom link: ${uri.path}`)
+    },
+  })
 }
 
 // This method is called when your extension is deactivated
