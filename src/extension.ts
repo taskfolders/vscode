@@ -11,6 +11,8 @@ import { MemFS } from './tmp/MemFS'
 export const uuidRegex =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i
 
+const outputChannel = vscode.window.createOutputChannel('TaskFolders Output')
+
 function play1(context: vscode.ExtensionContext) {
   context.subscriptions.push(
     vscode.commands.registerCommand('extension.openCustomLink', url => {
@@ -41,6 +43,7 @@ function play1(context: vscode.ExtensionContext) {
 }
 
 function linkifyUUIDs() {
+  throw Error('boom')
   console.log('DEBUG: doing links')
   // Get the active text editor
   const editor = vscode.window.activeTextEditor
@@ -85,13 +88,14 @@ function linkifyUUIDs() {
 export function activate(context: vscode.ExtensionContext) {
   // Use the console to output diagnostic information (console.log) and errors (console.error)
   // This line of code will only be executed once when your extension is activated
-  console.log('Congratulations, your extension "code-play" is now active!')
-  console.log(context.subscriptions)
+  // console.log(context.subscriptions)
+  console.error('Activate TF')
 
-  let d1 = vscode.commands.registerCommand('code-play.playHello', () => {
+  let d1 = vscode.commands.registerCommand('TaskFolders.playHello', () => {
     // The code you place here will be executed every time your command is executed
     // Display a message box to the user
     vscode.window.showInformationMessage('Hello World from code-play 2!')
+    console.log('[TF] command executed!')
   })
   context.subscriptions.push(d1)
 
@@ -100,12 +104,13 @@ export function activate(context: vscode.ExtensionContext) {
     // Now provide the implementation of the command with registerCommand
     // The commandId parameter must match the command field in package.json
     let disposable = vscode.commands.registerCommand(
-      'code-play.helloWorld',
+      'TaskFolders.helloWorld',
       () => {
         console.log('DEBUG: inside hello')
         console.log('This is a log message')
         console.warn('This is a warning message')
         console.error('This is an error message')
+        console.error('This is an error message again')
         vscode.window.showInformationMessage('This is an information message')
         // The code you place here will be executed every time your command is executed
         // Display a message box to the user
@@ -157,6 +162,13 @@ export function activate(context: vscode.ExtensionContext) {
   //markdownLinks(context)
   // play1(context)
   // playWiki(context)
+  // console.log('one - log')
+  // console.info('one - info')
+  // console.warn('one - warn')
+  // console.error('one - error')
+  outputChannel.appendLine('TaskFolders channel started')
+
+  //throw Error('boom')
   registerUUIDLinks(context)
   if (1) {
     registerWikiLinks(context)

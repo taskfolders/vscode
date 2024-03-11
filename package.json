@@ -3,7 +3,7 @@
   "displayName": "TaskFolders",
   "publisher": "TaskFolders",
   "description": "my description",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -29,7 +29,9 @@
           "Plain Text"
         ],
         "extensions": [
-          ""
+          ".md",
+          ".sh",
+          ".ts"
         ],
         "filenames": [
           ""
@@ -76,7 +78,7 @@
     "@types/vscode": "^1.85.0",
     "@typescript-eslint/eslint-plugin": "^6.13.1",
     "@typescript-eslint/parser": "^6.13.1",
-    "@vscode/test-cli": "^0.0.4",
+    "@vscode/test-cli": "^0.0.6",
     "@vscode/test-electron": "^2.3.8",
     "eslint": "^8.54.0",
     "ts-loader": "^9.5.1",
