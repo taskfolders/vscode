@@ -1,3 +1,5 @@
+import { expect, describe, it } from 'vitest'
+
 let sample = `
 some 9223c2ee-1d5c-446e-ae8b-8024d66b11d9
 and again

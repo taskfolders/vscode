@@ -1,3 +1,4 @@
+import { expect, describe, it } from 'vitest'
 let $dev = console.log
 import { Volume } from 'memfs'
 import { parseWikiLinks } from './parseWikiLinks'

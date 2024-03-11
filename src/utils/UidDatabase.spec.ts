@@ -1,8 +1,9 @@
+import { expect, describe, it } from 'vitest'
+
 import { UidDatabase } from './UidDatabase'
-describe('x', () => {
-  it('x', async () => {
-    let sut = new UidDatabase()
-    sut.load()
-    //$dev(sut)
-  })
+
+it('x', async () => {
+  let sut = new UidDatabase()
+  sut.load()
+  $dev(sut)
 })
