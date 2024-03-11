@@ -8,7 +8,7 @@ export function hoverUUID(context: vscode.ExtensionContext) {
   console.log('DEBUG: hover provider')
   let db = new UidDatabase()
   db.load()
-  let uidsMap = db.uidsMap
+  let uidsMap = db.uidToPath
   let r1 = fs.readdirSync(process.env.HOME as string)
   console.log({ r1 })
   let disposable = vscode.languages.registerHoverProvider('*', {

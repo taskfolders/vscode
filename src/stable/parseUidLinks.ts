@@ -10,7 +10,7 @@ export function parseUidLinks(text: string) {
   for (let match of all) {
     // console.log('Found uuid match', match)
     let uid = match[0]
-    let pathFound = db.uidsMap[uid]
+    let pathFound = db.uidToPath[uid]
     if (pathFound) {
       acu.push({ index: match.index as number, uid, path: pathFound })
     } else {

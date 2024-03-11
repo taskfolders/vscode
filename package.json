@@ -59,7 +59,8 @@
     "watch-tests": "tsc -p . -w --outDir out",
     "pretest": "npm run compile-tests && npm run compile && npm run lint",
     "lint": "eslint src --ext ts",
-    "test:w": "vitest",
+    "test:w": "NODE_ENV=test vitest",
+    "test:ci": "NODE_ENV=test vitest --run",
     "test": "vscode-test"
   },
   "devDependencies": {

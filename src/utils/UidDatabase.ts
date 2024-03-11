@@ -4,8 +4,8 @@ import { readFileSync } from 'fs'
 let single: UidDatabase
 
 export class UidDatabase {
-  uidsMap: Record<string, string> = {}
-  sidsMap: Record<string, string> = {}
+  uidToPath: Record<string, string> = {}
+  sidToPath: Record<string, string> = {}
 
   static singleton() {
     if (!single) {
@@ -30,8 +30,6 @@ export class UidDatabase {
     }
 
     let uids = {} as any
-    let sids = {} as any
-
     Object.entries(data.uids).map(([uid, value]) => {
       uids[uid] = value.path
 
@@ -43,11 +41,17 @@ export class UidDatabase {
       // TODO #now
       // let con = value.contentIds?.uids
       // if (con) {
-      //   console.log('TODO')
       //   // $dev(value)
       // }
     })
-    this.uidsMap = uids
-    this.sidsMap = sids
+
+    let sids = {} as any
+    Object.entries(data.sids).map(([sid, uid]) => {
+      let val = data.uids[uid]
+      sids[sid] = val.path
+    })
+
+    this.uidToPath = uids
+    this.sidToPath = sids
   }
 }

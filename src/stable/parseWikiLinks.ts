@@ -14,12 +14,12 @@ export function parseWikiLinks(kv: { text: string; dir: string; fs?: any }) {
   for (let ma of all) {
     let link = ma[1].trim()
     if (isUUID(link)) {
-      let path = db.uidsMap[link]
+      let path = db.uidToPath[link]
       if (path) {
         acu.push({ text: ma[0], index: ma.index as number, path })
       }
     } else if (link.startsWith(':')) {
-      let path = db.sidsMap[link.slice(1)]
+      let path = db.sidToPath[link.slice(1)]
       if (path) {
         acu.push({ text: ma[0], index: ma.index as number, path })
       }
