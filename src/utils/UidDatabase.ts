@@ -20,6 +20,12 @@ export class UidDatabase {
 
   //parsePathUids() {
   load() {
+    let p1 = join(
+      process.env.HOME,
+      'Library/Application Support/TaskFolders.com',
+    )
+    let p2 = join(process.env.HOME, '.config/TaskFolders.com/db.json')
+
     let path = join(process.env.HOME, '.config/TaskFolders.com/db.json')
     console.log('Loading TaskFolders uid database', path)
     let data = JSON.parse(readFileSync(path).toString()) as {

@@ -3,7 +3,7 @@
   "displayName": "TaskFolders",
   "publisher": "TaskFolders",
   "description": "my description",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "engines": {
     "vscode": "^1.85.0"
   },
@@ -44,6 +44,7 @@
     ]
   },
   "scripts": {
+    "pack": "npx vsce package",
     "vscode:prepublish": "npm run package",
     "code": "code tf-vscode.code-workspace",
     "compile": "webpack",
@@ -58,6 +59,7 @@
     "test": "vscode-test"
   },
   "devDependencies": {
+    "@types/jest": "^29.5.12",
     "@types/mocha": "^10.0.6",
     "@types/node": "18.x",
     "@types/vscode": "^1.85.0",
@@ -66,6 +68,7 @@
     "@vscode/test-cli": "^0.0.6",
     "@vscode/test-electron": "^2.3.8",
     "eslint": "^8.54.0",
+    "ts-jest": "^29.1.2",
     "ts-loader": "^9.5.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.2",
