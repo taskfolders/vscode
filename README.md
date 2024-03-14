@@ -1,6 +1,6 @@
 ## TaskFolders VSCode Assistant
 
-A VS Code extension to quickly jump to files indexed by [TaskFolders](https://taskfolders.com) cliking on UUIDs or short ids
+A VS Code extension to quickly jump to files indexed by [TaskFolders](https://taskfolders.com) cliking on UUIDs or short ids. For a quick introduction follow the [getting started](http://taskfolders.com/docs/introduction/getting-started) guide.
 
 **Features:**
 

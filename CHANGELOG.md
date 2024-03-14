@@ -1,9 +1,9 @@
 # Change Log
 
-All notable changes to the "code-play" extension will be documented in this file.
+## [v0.0.4] - 2024-02-14
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+### Changed
 
-## [Unreleased]
+- Identify as SID any single word starting by `:` or `@` 
+- Auto convert to link any known SID
 
-- Initial release
