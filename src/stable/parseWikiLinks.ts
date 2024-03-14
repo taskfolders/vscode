@@ -19,10 +19,11 @@ export function parseWikiLinks(kv: { text: string; dir: string; fs?: any }) {
         acu.push({ text: ma[0], index: ma.index as number, path })
       }
     } else if (link.startsWith(':')) {
-      let path = db.sidToPath[link.slice(1)]
-      if (path) {
-        acu.push({ text: ma[0], index: ma.index as number, path })
-      }
+      // TODO #solve skip? Done already by parseSidLinks ?
+      // let path = db.sidToPath[link.slice(1)]
+      // if (path) {
+      //   acu.push({ text: ma[0], index: ma.index as number, path })
+      // }
     } else if (link.startsWith('.')) {
       let path = join(kv.dir, link)
       if (fs.existsSync(path)) {

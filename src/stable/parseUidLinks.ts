@@ -19,3 +19,23 @@ export function parseUidLinks(text: string) {
   }
   return acu
 }
+
+export function parseSidLinks(text: string) {
+  let all = [...text.matchAll(/\B[:@]([\w-]+)/g)]
+  let db = UidDatabase.singleton()
+
+  let acu: { index: number; sid: string; path: string }[] = []
+  for (let match of all) {
+    // console.log('Found uuid match', match)
+    let sid = match[1]
+    // console.log({ sid, match })
+
+    let pathFound = db.sidToPath[sid]
+    if (pathFound) {
+      acu.push({ index: match.index as number, sid, path: pathFound })
+    } else {
+      // acu.push({ index: match.index as number, uid, path: '-unknown-' })
+    }
+  }
+  return acu
+}
